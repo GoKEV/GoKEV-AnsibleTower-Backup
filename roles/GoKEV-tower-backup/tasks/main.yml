@@ -1,0 +1,41 @@
+---
+# tasks file for GoKEV-tower-backup
+
+## Here we will loop through these included tasks
+## Credentials
+## Projects
+## Job Templates
+## Local Users
+## Inventories
+
+#- name: Log in to the API
+#  uri:
+#    url: https://{{ tower_server }}/api/login/
+#    method: GET
+#    body:
+#      name: "{{ tower_user }}"
+#      password: "{{ tower_pass }}"
+#      enter: Log in
+#    validate_certs: False
+#  delegate_to: localhost
+
+- name: Get projects list
+  uri:
+    url: https://{{ tower_server }}/api/v2/projects/
+    method: GET
+    user: "{{ tower_user }}"
+    password: "{{ tower_pass }}"
+    validate_certs: False
+    force_basic_auth: true
+  register: tower_reply
+  failed_when: False
+  delegate_to: localhost
+
+
+- name: debug reply info
+  debug:
+    msg: "Connecting with {{ tower_user }} / {{ tower_pass }}... Tower Ping Result: {{ tower_reply }}"
+  when: tower_reply is defined
+  ignore_errors: true
+
+

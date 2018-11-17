@@ -1,0 +1,15 @@
+---
+- hosts: localhost
+  gather_facts: no
+
+  vars:
+    tower_server: tower01.shadow
+    tower_user: admin
+    tower_pass: redhat
+    tower_action: backup
+#    tower_action: restore
+
+
+  roles:
+    - "GoKEV-tower-{{ tower_action }}"
+
