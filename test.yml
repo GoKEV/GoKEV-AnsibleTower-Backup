@@ -1,0 +1,21 @@
+---
+- hosts: localhost
+  gather_facts: no
+
+  vars:
+    patha:
+    - etc
+    - var
+    pathb:
+    - game
+    - logs
+
+  tasks:
+  - name: debug some stuff
+    debug: 
+      msg: "cat /{{ item[0] }}/{{ item[1] }}"
+    with_nested:
+    - [ 'etc', 'var' ]
+    - [ 'game', 'logs', 'otherthing' ]
+
+
