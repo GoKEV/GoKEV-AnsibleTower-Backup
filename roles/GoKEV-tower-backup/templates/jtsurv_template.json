@@ -1,0 +1,26 @@
+{
+    "spec": [
+
+// loop here
+
+        {
+            "required": null,
+            "min": null,
+            "default": null,
+            "max": null,
+            "question_description": null,
+            "choices": null,
+            "new_question": null,
+            "variable": null,
+            "question_name": null,
+            "type": null,
+        },
+
+// loop here
+
+    ],
+    "name": "",
+    "description": ""
+}
+
+
