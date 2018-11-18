@@ -7,11 +7,6 @@
 ## Local Users
 ## Inventories
 
-
-
-
-
----
 - name: register all job template details
   uri:
     url: "https://{{ tower_url }}api/v2/job_templates/"
