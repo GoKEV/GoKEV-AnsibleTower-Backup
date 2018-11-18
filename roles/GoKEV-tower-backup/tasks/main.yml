@@ -9,7 +9,7 @@
 
 - name: register all job template details
   uri:
-    url: "https://{{ tower_url }}api/v2/job_templates/"
+    url: "https://{{ tower_server }}/api/v2/job_templates/"
     method: GET
     user: "{{ tower_user }}"
     password: "{{ tower_pass }}"
@@ -26,7 +26,7 @@
     msg: "{{ item }}"
   with_items: "{{ all_templates }}"
 
-- command: "tower-cli receive -p {{ tower_pass }} -u {{ tower_user }} -h https://{{ tower_url }} --insecure --job_template {{ item }}"
+- command: "tower-cli receive -p {{ tower_pass }} -u {{ tower_user }} -h https://{{ tower_server }} --insecure --job_template {{ item }}"
   with_items: "{{ all_templates }}"
   register: output
 
