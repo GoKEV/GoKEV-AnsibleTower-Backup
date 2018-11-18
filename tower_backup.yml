@@ -3,9 +3,10 @@
   gather_facts: no
 
   vars:
-    tower_server: tower01.shadow
+#    tower_server: tower01.shadow
+    tower_server: 10.0.20.193
     tower_user: admin
-    tower_pass: redhat
+    tower_pass: GoKEV!
     tower_action: backup
 #    tower_action: restore
 

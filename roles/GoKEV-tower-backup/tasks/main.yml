@@ -7,7 +7,7 @@
 ## Local Users
 ## Inventories
 
-- name: register all job template details
+- name: grab ID numbers of all job templates
   uri:
     url: "https://{{ tower_server }}/api/v2/job_templates/"
     method: GET
@@ -17,19 +17,41 @@
     status_code: 200
     validate_certs: False
     return_content: yes
-  register: all_templates
+  register: all_jt_list
 
 - set_fact:
-    all_templates: "{{ all_templates.json.results | map(attribute='name') | list }}"
+    all_jts: "{{ all_jt_list.json.results | map(attribute='id') | list }}"
 
 - debug:
     msg: "{{ item }}"
-  with_items: "{{ all_templates }}"
+  with_items: "{{ all_jts }}"
 
-- command: "tower-cli receive -p {{ tower_pass }} -u {{ tower_user }} -h https://{{ tower_server }} --insecure --job_template {{ item }}"
-  with_items: "{{ all_templates }}"
-  register: output
+
+- name: grab each job template content
+  uri:
+    url: "https://{{ tower_server }}/api/v2/job_templates/{{ item }}/"
+    method: GET
+    user: "{{ tower_user }}"
+    password: "{{ tower_pass }}"
+    force_basic_auth: yes
+    status_code: 200
+    validate_certs: False
+    return_content: yes
+  with_items: "{{ all_jts }}"
+  register: all_jts.meat
+
+#- debug:
+#    msg: "item.item={{item.item}}, item.stdout={{item.stdout}}, item.changed={{item.changed}}"
+#  with_items: "{{ all_jt_content.results }}"
+
+#- local_action: copy content={{ foo_result }} dest=/path/to/destination/file
+#register: all_template_content
+
 
 - debug:
-    var: output
+    msg: "LIST of em {{ all_jts.content }}"
+
+
+#- set_fact:
+#    all_templates: "{{ all_templates.json.results | map(attribute='name') | list }}"
 
