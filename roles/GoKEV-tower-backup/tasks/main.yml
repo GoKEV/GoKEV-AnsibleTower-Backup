@@ -1,6 +1,5 @@
 ---
-# tasks file for GoKEV-tower-backup
-
+## tasks file for GoKEV-tower-backup
 ## Here we will loop through these included tasks
 ## Credentials
 ## Projects
@@ -8,34 +7,34 @@
 ## Local Users
 ## Inventories
 
-#- name: Log in to the API
-#  uri:
-#    url: https://{{ tower_server }}/api/login/
-#    method: GET
-#    body:
-#      name: "{{ tower_user }}"
-#      password: "{{ tower_pass }}"
-#      enter: Log in
-#    validate_certs: False
-#  delegate_to: localhost
 
-- name: Get projects list
+
+
+
+---
+- name: register all job template details
   uri:
-    url: https://{{ tower_server }}/api/v2/projects/
+    url: "https://{{ tower_url }}api/v2/job_templates/"
     method: GET
     user: "{{ tower_user }}"
     password: "{{ tower_pass }}"
+    force_basic_auth: yes
+    status_code: 200
     validate_certs: False
-    force_basic_auth: true
-  register: tower_reply
-  failed_when: False
-  delegate_to: localhost
+    return_content: yes
+  register: all_templates
 
+- set_fact:
+    all_templates: "{{ all_templates.json.results | map(attribute='name') | list }}"
 
-- name: debug reply info
-  debug:
-    msg: "Connecting with {{ tower_user }} / {{ tower_pass }}... Tower Ping Result: {{ tower_reply }}"
-  when: tower_reply is defined
-  ignore_errors: true
+- debug:
+    msg: "{{ item }}"
+  with_items: "{{ all_templates }}"
 
+- command: "tower-cli receive -p {{ tower_pass }} -u {{ tower_user }} -h https://{{ tower_url }} --insecure --job_template {{ item }}"
+  with_items: "{{ all_templates }}"
+  register: output
+
+- debug:
+    var: output
 
