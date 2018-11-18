@@ -49,7 +49,7 @@
 
 
 - debug:
-    msg: "LIST of em {{ all_jts.content }}"
+    msg: "LIST of em {{ all_jts.meat }}"
 
 
 #- set_fact:
